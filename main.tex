@@ -1,0 +1,93 @@
+\documentclass{report}
+\usepackage{geometry}%
+\geometry{margin=1in}%
+%\documentclass{book}
+\usepackage[utf8]{inputenc}
+
+\usepackage{clrscode3e}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{tikz}
+\usepackage{subfigure}
+\usepackage{float}
+\usepackage{tikzpagenodes}
+\usepackage{graphicx}
+
+\usepackage{tabularx}
+
+%\usepackage[sectionbib]{chapterbib}
+
+\usepackage{amsthm}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+\usepackage{nomencl}
+\makenomenclature
+
+%\usepackage{afterpage}
+%\usepackage{makeidx}
+%\makeindex
+
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{procedure}[theorem]{Procedure}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\newcounter{ch}
+\newcounter{n}
+\newcounter{c}
+\newcounter{d}
+
+\begin{document}
+% \pagestyle{empty}
+% \pagecolor{black}
+% \color{white}
+% \include{000-cover-202001131210}
+% \pagecolor{white}
+% \color{black}
+
+\pagenumbering{roman}%\frontmatter
+\include{000-Pagei-202001091754}
+%\pagestyle{headings}
+\include{0-Certificate-202005042000}
+\include{A-Acknowledgements-202001081800}
+%\chapter*{Acknowledgements}\chaptermark{Acknowledgements}
+
+%\include{B-Preface-202001111345}
+\tableofcontents
+\include{C-Symbols-202001111417}
+\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures
+\listoftables
+\addcontentsline{toc}{chapter}{\listtablename}
+\newpage\pagenumbering{arabic}%\mainmatter
+\include{0-Abstract-202005202248}
+\include{2-Introduction-202001151451}
+\include{1-Preliminaries-202001111420}
+
+\include{3-Graph-Burning-202001031046}
+\include{4-Graph-Burning-Examples-202001070950}
+\include{5-Other-games-and-Problems-202001111432}
+\include{6-Why-Hard-2020011749}
+\include{7-Where-easy-202001201201}
+\include{8-Approximation-202001091617}
+\include{9-Conclusion-202001221350}
+
+% \null\newpage
+% \printindex
+% \addcontentsline{toc}{chapter}{Index}
+% \null\newpage
+% \null\thispagestyle{empty}\newpage
+% \afterpage{\null\newpage}
+% \pagecolor{black}
+
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{ref.bib}%remove-this
+\bibliographystyle{plain}%remove-this
+\end{document}

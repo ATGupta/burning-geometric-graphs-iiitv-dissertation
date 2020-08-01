@@ -1,0 +1,10 @@
+\chapter*{\centering Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+A procedure called \textit{graph burning} was introduced to facilitate the modelling of spread of an alarm, a social contagion, or a social influence or emotion on graphs and networks.
+
+Graph burning runs on discrete time-steps (or rounds). At each step $t$, first (a) an unburned vertex is burned (as a \textit{fire source}) from ``outside'', and then (b) the fire spreads to vertices adjacent to the vertices which are burned till step $t-1$. This process stops after all the vertices of $G$ have been burned. The aim is to burn all the vertices in a given graph in minimum time-steps. The least number of time-steps required to burn a graph is called its \textit{burning number}. The less the burning number is, the faster a graph can be burned.
+
+Burning a general graph optimally is an NP-Complete problem. It has been proved that optimal burning of path forests, spider graphs, and trees with maximum degree three is NP-Complete. We study the \textit{graph burning problem} on several sub-classes of \textit{geometric graphs}.
+
+We show that burning interval graphs (\Cref{section:burn-interval-graphs}, \Cref{theorem:BIGNPCIG}), permutation graphs (\Cref{section:burn-permutation-graphs}, \Cref{theorem:BPGNPC}) and disk graphs (\Cref{section:burn-disk-graphs}, \Cref{theorem:BDGNPC}) optimally is NP-Complete. In addition, we opine that optimal burning of general graphs (\Cref{section:no-better-than-3-approx}, \Cref{conjecture:no-better-than-3-approx}) cannot be approximated better than 3-approximation factor.

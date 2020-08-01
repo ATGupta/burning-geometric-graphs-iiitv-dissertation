@@ -1,0 +1,41 @@
+\chapter{Conclusion and future work}\label{chapter:conclusion}
+
+\section{Observations}
+
+\subsection{On graph burning}
+
+Discovery of the graph burning and the burning number property was motivated by the works that were trying to model the spread of an object. This object multiplies and spreads to nodes through connections.
+
+This object is, so far, related to spread of electronic information in a network, for example, spread of a meme, a gossip, a social contagion, influence or emotion, message, or alarms through a social network. The burning number describes the minimum number of (discrete) time-steps that are able to ``infect'' the whole network with an object.
+
+\subsection{Burning versus other problems}
+
+Optimal graph burning is proved to be computationally hard on various graph classes. It is clear with reference to interval graphs, permutation graphs, disk graphs, spider graphs, trees, path forests and several other graph classes that optimal burning of such graph classes is NP-Complete where other problems, which are NP-Complete for general graphs, can be solved in polynomial time. While proving NP-Completeness, we have extensively utilized the distinct 3-partition problem, by reducing it to the burning of several graph classes.
+
+Although, burning is easy on some other graph classes such as split graphs and cographs.
+
+\subsection{Approximating the burning sequence}
+
+The 3-approximation algorithm for deriving a burning sequence for an arbitrary graph is based on the pairwise disjointness of the half neighbourhoods of the fire sources.
+
+Approximating the burning sequence for general graphs better than the factor of $3$ may be computationally hard because pairwise disjointness on more than half neighbourhood of the fire sources is not possible on general graphs.
+
+\section{What next?}
+
+\subsection{Discrete mathematics and theoretical algorithm design}
+
+So far a few graphs have been shown to be NP-Complete from the burning perspective, a few have been shown to be solvable in polynomial time.
+Still several of the graph classes are left to research on, which are useful in various practical scenarios, and determine whether deriving an optimal burning sequence is solvable polynomially.
+
+We showed that we can approximate burning of interval graphs, which we have shown to be NP-Complete to solve optimally, within an approximation ratio of $1+(1/k)$, but not less than this factor.
+This observation is close enough to the limit imposed by the theorem that if P $\neq$ NP, then $R_A\geq 1+(1/k)$ in all cases. Although, the conjecture that P $\neq$ NP remains unaffected, and we have not proved or disproved it.
+
+\subsection{Practical implementations}
+
+Graph burning has been proposed to model several real-time systems which are complex otherwise.
+
+The graph burning can also be used in several practical scenarios other than spreading a message, alarm, or contagion. For example, the spread of an infection, virus, etc can also be modelled using this newly discovered graph procedure. We can model the spread of a ``real-life'' contagion using graph burning, such as person-to-person spread of a communicable infection.
+
+The multiplication of the virus inside a host and its behavior of infecting the network of target cells may also be modelled very precisely same as how the fire spreads throughout a graph. And then the firefighter problem can be used to simulate the defence of the host body. Similarly, firefighter can also be used in the simulation of the ``real-life'' social communication of a disease, where it can be used to model \textit{how do} or \textit{how good can} we plan for the defence mechanism, given the constraints such as availability of vaccines, etc by using the minimum resources to save the maximum population.
+
+It might not be very simple and also, may not be exactly same as what we have modelled so far theoretically on static graphs; weights may be involved, time instances may not be discrete and at equal intervals as we model theoretically. Probabilities with respect to the spread or rescue may also be involved, along with deaths (with probabilities involved). In such cases, elimination of cells from the body and people from a real-life social network, which can be modelled by elimination of vertices in the graph being modelled. So, this model that we propose as one of the probable future works can also be extended to probabilistic or temporal graphs which may give us better, more precise results based on the ``real-life'' circumstances.

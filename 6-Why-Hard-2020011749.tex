@@ -1,0 +1,840 @@
+\chapter{Why is burning hard?}\label{chapter:why-hard}
+
+In this chapter, we describe some of our novel results in \Cref{section:burn-interval-graphs}, \Cref{section:burn-permutation-graphs}, and \Cref{section:burn-disk-graphs}. Respectively, we show that burning interval graphs, permutation graphs and disk graphs is NP-Complete. In fact, NP-Completeness of burning disk graphs follows from the NP-Completeness of interval graphs, but our construction in the proof for disk graphs is such that another class of graphs follows to be NP-Complete from it.
+
+As corollaries of our results in these sections, it follows that burning several other graph classes remains NP-Complete. These corollaries are obtained for those graph classes for which NP-Completeness results have been shown earlier. We provide citations to the resources where the respective results were first discussed.
+
+\section{Burning interval graphs}\label{section:burn-interval-graphs}
+
+\subsection{Similarity in burning paths and interval graphs}\label{subsection:similar-burn-path-IG}
+
+Refer to the definition of the burning cluster of a fire source, described as \Cref{definition:burning-cluster} in \Cref{section:burn-problem}. While demonstrating the burning of a path or cycle in \Cref{section:burn-path}, we obtain an observation described as \Cref{observation:path} as follows.
+
+\begin{observation}\label{observation:path}
+The burning clusters of each of the $n$ fire sources of any optimal burning sequence of a path of order $n^2$ are pairwise disjoint.
+\end{observation}
+
+From \Cref{corollary:NHClosurePIG} in \Cref{subsection:interval-graphs}, \Cref{observation:bound} follows, which we describe as follows.
+
+\begin{observation}\label{observation:bound}
+Let $P$ be a shortest path of maximum length among shortest paths between all pairs of vertices in an interval graph $G$. Then $b(P) \leq b(G) \leq b(P)+1$.
+\end{observation}
+
+\Cref{observation:bound} has been shown earlier in \cite{Kare2019,Kamali2019,Kamali2020}.
+
+Finding such $P$ is easy to do in polynomial time. We can simply compute all pair shortest path and choose the maximum length path among all. So burning an interval graph in $(b(P)+1)$ is trivial. We study if $b(G)=b(P)$, whether it is always possible to determine the same and compute a burning sequence of length $b(P)$. 
+We show that this is an NP-Complete problem.
+We use the distinct 3-partition problem (see \Cref{section:d3pp}) and reduce it to interval graph burning to show NP-Completeness of this graph burning subproblem.
+
+\subsection{Interval graph construction for NP-completeness}
+
+Let $X$ be an input set to the distinct 3-partition problem; let $n=\frac{|X|}{3}$, $m = \max (X)$, $B = \frac{s(X)}{n}$, and $k=m-3n$. Let $F_m$ be the set of first $m$ natural numbers, $F_m = \{1,2,3,...,m\}$; and $F^{\prime}_m$ be the set of first $m$ odd numbers, $F^\prime_m = \{2\ f_i-1: f_i \in F_m\} = \{1, 3, 5, . . ., 2m-1\}$. Let $X^\prime = \{2\ a_i-1:a_i \in X\}$, $B^\prime = \frac{s(X^\prime)}{n}$. Observe that $s(X^\prime) = \sum_{i=1}^{3n} 2\ a_i -1 = 2nB-3n$, so $B^\prime = 2B-3$. Let $Y=F_m^\prime\setminus X^\prime$.
+
+Let there be $n$ paths $Q_1,Q_2...,Q_n$, each of order $B^\prime$; $k$ paths $Q_1^\prime,Q_2^\prime,...,Q_k^\prime$ such that each $Q_j^\prime (1\leq j\leq k)$ is of order of $j^{th}$ largest number in $Y$, and $m+1$ paths $T_1,T_2,...,T_{m+1}$ such that each $T_j (1\leq j\leq m+1)$ is of order of $2(2m+1-j)+1$. We join these paths in the following order to form a larger path:\\
+$Q_1$, $T_1$, $Q_2$, $T_2$, $...$, $Q_n$, $T_n$, $Q_1^\prime,T_{n+1}$, $Q_2^\prime$, $T_{n+2}$, $...$, $Q_k^\prime$, $T_{n+k}$, $T_{n+k+1}$, $...$, $T_{m+1}$.\\
+We call this path $P_I$. Number of vertices in $P_I$ is $(2m+1)^2$. Hence $b(P_I)=(2m+1)$.
+
+Now we add a few more vertices to $P_I$. 
+We add a distinct vertex connected to each vertex from $2nd$ to $2nd$-last vertices of $T_j$ $\forall\ 1\leq j\leq m+1$.
+Let this graph be called $IG(X)$. Total number of vertices in $IG(X)$ is $(2m+1)^2+((2m)^2-(m-1)^2)=4m^2+1+4m+4m^2-m^2-1+2m=7m^2+6m$. 
+Observe that, in $IG(X)$, $P_I$ is a shortest path of maximum length among shortest paths between all pairs of vertices, and all other vertices not in $P_I$ are at most at a distance one from some vertex of $P_I$. Also, $IG(X)$ is a tree: it contains no cycles.
+So $IG(X)$ is a valid interval graph (an example illustrated in \Cref{subsection:ExConsIG}, and \Cref{figure:IGNPCEIG}).
+We show in \Cref{lemma:BNb(G)IG} that burning number of $IG(X)$ is still $2m+1$, i.e., $b(IG(X))=b(P_I)$. 
+Then we show that burning an interval graph is NP-Complete because to burn $IG(X)$, we must solve the distinct 3-partition problem on $X$.
+
+\Cref{figure:TStructureIG} illustrates a particular $T_j$ along with the added vertices and edges (vertically upwards w.r.t. $T_j$). This forms a comb structure, we call it $A_{T_j}$.
+
+%\newcounter{c}
+%\newcounter{d}
+\newcounter{i}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[scale=.7]
+        \setcounter{c}{0}
+        \setcounter{d}{-1}
+        \setcounter{i}{1}
+        \loop
+            \ifthenelse{\value{c}=5}{
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt, label=below:{$x_1$}]      (A\thec) at (\value{c}*.3,0) {};
+            }{
+                \ifthenelse{\value{c}=11}{
+                   \node [circle, fill=black, inner sep=0pt, minimum size=3pt, label=below:{$v\ v_r$}] (A\thec) at (\value{c}*.3,0) {};
+                }{
+                    \ifthenelse{\value{c}=20}{
+                        \node [circle, fill=black, inner sep=0pt, minimum size=3pt, label=below:{$x_2$}] (A\thec) at (\value{c}*.3,0) {};
+                    }{
+                        \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (A\thec) at (\value{c}*.3,0) {};
+                    }
+                }
+            }
+
+            \ifthenelse{\value{c}>0 \AND \value{c}<32}{
+                \ifthenelse{\value{c}=1}{
+                    \node [circle, fill=black, inner sep=0pt, minimum size=3pt, label=left:{$u_j^1$}] (B\thec) at (\value{c}*.3,1) {};
+
+                    \draw[blue] (A\thec) -- (B\thec);
+                }{
+                    \ifthenelse{\value{c}=31}{
+                        \node [circle, fill=black, inner sep=0pt, minimum size=3pt, label=right:{$u_j^{|T_j|-2}$}] (B\thec) at (\value{c}*.3,1) {};
+
+                        \draw[blue] (A\thec) -- (B\thec);
+                    }{
+                        \ifthenelse{\value{c}=10}{
+                            \node [circle, fill=black, inner sep=0pt, minimum size=3pt, label=above:{$v_t$}] (B\thec) at (\value{c}*.3,1) {};
+
+                            \draw[blue] (A\thec) -- (B\thec);
+                        }{
+                            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (B\thec) at (\value{c}*.3,1) {};
+
+                            \draw[blue] (A\thec) -- (B\thec);
+                        }
+                    }
+                }
+            }{}
+
+            \ifthenelse{\value{c}>0}{
+                \draw (A\thec) -- (A\thed);
+            }{}
+
+            \ifthenelse{\value{c}=0}{
+                \draw[red,dashed] (-1,0) -- (A\thec);
+            }{}
+            \ifthenelse{\value{c}=32}{
+                \draw[red,dashed] (A\thec) -- (\value{c}*.3+1,0);
+            }{}
+
+            \stepcounter{c}
+            \stepcounter{d}
+            \stepcounter{i}
+            \ifnum \value{c}<33
+            \repeat
+
+            \draw[<-] (1.9,-.3) -- (2.6,-.3);
+            \draw[->] (3.7,-.3) -- (5.6,-.3);
+    \end{tikzpicture}
+    \caption{Structure of a $T_j$ with 33 vertices, along with the extra vertices connected to it. The dashed line represents the fact that other subpaths may be connected to a $T_j$ on either or both ends.}
+    \label{figure:TStructureIG}
+\end{figure}
+
+Let $u^1_j$ be the vertex connected to the $2nd$ vertex of each $T_j$ and $u^{|T_j|-2}_j$ be the vertex connected to its $2nd$-last vertex of $T_j$, where $|T_j|$ stands for the number of vertices in the sub path $T_j$. Let $A_{T_j}^\prime=\{u^1_j, u^2_j, ..., u^{|T_j|-2}_j\}$ be the set of all $|T_j|-2$ additional vertices corresponding to $T_j$. Let $A_{T_j}$ be the subgraph induced by the vertices in $A_{T_j}^\prime\cup T_j$. We have the following observation regarding $A_{T_j}$.
+
+\begin{observation}\label{observation:overlap}
+If $A_{T_j}$ is burnt by $o\geq 2$ fire sources put on $T_j$, then the burning clusters of at least two of these fire sources will overlap (contain common vertices).
+\end{observation}
+
+\begin{proof}
+Let that some $T^c_j$ be completely burnt by two or more fire sources and yet there is no overlap between the burning clusters of any of those fire sources.
+Since all the fire sources are on $T_j$, which is a sub path of $P_I$, we call two fire sources on $T_j$ are \textit{adjacent} if there is a path in $T_j$ between those two fire sources such that the path does not contain any other fire sources.
+For any two adjacent fire sources let us assume that there is no vertex which lies in the burning clusters of both the fire sources. Let $v$ be a vertex on the path joining those two adjacent fire sources $x_1$ and $x_2$, such that the vertices in the left side of $v$ including it (vertices towards $x_1$ as shown in Figure \ref{figure:TStructureIG} using the left arrow) are burnt by $x_1$ and the vertices in the right (Figure \ref{figure:TStructureIG}) by $x_2$.
+
+Let the vertex that is just right to $v$ is $v_r$. By pigeonhole principle, we have that at least one of $v$ or $v_r$ having a neighbor $v_t$ in $T^c_j$ which is not in $T_j$. Without the loss of generality, let that $v$ is having such a neighbor. Since the burning cluster of $x_1$ extends till $v$ and not to its one hop neighbor $v_r\ (\in T_j)$, so it does not burn the other one hop neighbor $v_t\ (\not\in T_j)$ too. It is easy to see that the second fire source can not burn  $v_t$. This is contradiction to our assumption that $T^c_j$ is burnt completely without overlapping clusters.
+\end{proof}
+
+\begin{corollary}\label{corollary:Tone}
+    If a single fire source is able to burn $T_j$, then $T^c_j$'s can also be burnt with it.
+\end{corollary}
+
+\begin{lemma}\label{lemma:notopt}
+If at least one $T_j$ is burnt using more than one fire sources, then $P_I$ can not be burnt optimally, i.e., in $b(P_I)= (2m+1)$ steps.
+\end{lemma}
+\begin{proof}
+Since $P_I$ is a simple path of length $(2m+1)^2$, according to \Cref{observation:path}, each fire source in a optimal burning sequence must burn disjoint set of vertices of $P_I$. Let ${x_1, x_2,...,x_{2m+1}}$ be an optimal burning sequence of $P_I$ such that some $T_j$ is burnt using more than one fire sources, then according to \Cref{observation:overlap}, at least two fire sources burn a common vertex of $P_I$ and hence ${x_1, x_2,...,x_{2m+1}}$ can not be an optimal burning sequence.
+\end{proof}
+
+Before going to the NP-completeness proof, we construct a specific example of $IG(X)$ below.
+
+\subsection{Example construction}\label{subsection:ExConsIG}
+
+Let $X=\{10,11,12,14,15,16\}$. Then $n=2,\ m = 16,\ B = 39,$ and $k=10$. Also $F_m=\{1,2,...,16\}$ and $F_m^\prime=\{1,3,...,31\}$. Further, $X^\prime = \{19,21,23,27,29,31\}$, $B^\prime = 75=2B-3$ and $Y=\{1,3,5,7,9,11,13,15,17,25\}$.
+Observe that $Q_1$ and $Q_2$ are paths of size $75$, and each $Q_1^\prime, Q_2^\prime,...,Q_{k}^\prime$ are paths of order of $25$, $17$, $15$, $13$, $11$, $9$, $7$, $5$, $3$, $1$ respectively. $T_1,T_2,T_3,...T_{m+1}$ are of order of $65,63, 61...,33$ respectively.
+We add a vertex connected to each vertex from $2nd$ to $2nd$-last vertices of $T_j (1\leq j\leq m+1)$.
+Observe that this is a valid interval graph. The constructed example $IG(X)$ is shown in \Cref{figure:IGNPCEIG}.
+
+Next we show that this interval graph can be burned optimally only if 3-partition problem can be solved for $X=\{10,11,12,14,15,16\}$.
+
+%\newcounter{n}
+\newcounter{r}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[scale=.7]
+        \setcounter{c}{0}
+        \setcounter{r}{0}
+        \loop
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (A) at (\value{r}*3.75,-\value{c}*2) {};
+            \ifnum \value{r}>0
+                \draw[red] (B) -- (A);
+            \fi
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (B) at (\value{r}*3.75+2.75,-\value{c}*2) {};
+
+            \draw (A)--(B);
+
+            \ifthenelse{\isodd{\value{r}}}{
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P1) at (\value{r}*3.75+.2,-\value{c}*2) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P2) at (\value{r}*3.75+2.75-.2,-\value{c}*2) {};
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U1) at (\value{r}*3.75+.2,-\value{c}*2+.75) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U2) at (\value{r}*3.75+2.75-.2,-\value{c}*2+.75) {};
+
+                \draw[blue] (P1) -- (U1);
+                \draw[blue] (P2) -- (U2);
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P3) at (\value{r}*3.75+.4,-\value{c}*2) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P4) at (\value{r}*3.75+2.75-.4,-\value{c}*2) {};
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U3) at (\value{r}*3.75+.4,-\value{c}*2+.75) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U4) at (\value{r}*3.75+2.75-.4,-\value{c}*2+.75) {};
+
+                \draw[blue] (P1) -- (U1);
+                \draw[blue] (P2) -- (U2);
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P5) at (\value{r}*3.75+.6,-\value{c}*2) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P6) at (\value{r}*3.75+2.75-.6,-\value{c}*2) {};
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U5) at (\value{r}*3.75+.6,-\value{c}*2+.75) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U6) at (\value{r}*3.75+2.75-.6,-\value{c}*2+.75) {};
+
+                \draw[blue] (P3) -- (U3);
+                \draw[blue] (P4) -- (U4);
+                \draw[blue] (P5) -- (U5);
+                \draw[blue] (P6) -- (U6);
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=2pt] at (\value{r}*3.75+2.75/2,-\value{c}*2+.375) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=2pt] at (\value{r}*3.75+2.75/2-.2,-\value{c}*2+.375) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=2pt] at (\value{r}*3.75+2.75/2+.2,-\value{c}*2+.375) {};
+            }{}
+
+            \stepcounter{r}
+            \ifnum\value{r}<4
+            \repeat
+
+        \node at (1.375,-.5) {$Q_1$}; \node at (5.125,-.5) {$T_1$};
+        \node at (8.625,-.5) {$Q_2$}; \node at (13,-.5) {$T_2$};
+
+        \stepcounter{c}
+        \setcounter{r}{5}
+        \loop
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (A\ther) at (\value{r}*2.5,-\value{c}*2) {};
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (B\ther) at (\value{r}*2.5+1.5,-\value{c}*2) {};
+            \ifnum\value{r}=5
+                \draw[red] (B\ther) -- (B);
+            \fi
+            \ifnum\value{r}<5
+                \setcounter{n}{\value{r}}
+                \stepcounter{n}
+                \draw[red] (B\ther) -- (A\then);
+            \fi
+
+            \draw (A\ther)--(B\ther);
+
+            \ifthenelse{\isodd{\value{r}}}{}{
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P1) at (\value{r}*2.5+.2,-\value{c}*2) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P2) at (\value{r}*2.5+1.5-.2,-\value{c}*2) {};
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U1) at (\value{r}*2.5+.2,-\value{c}*2+.75) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U2) at (\value{r}*2.5+1.5-.2,-\value{c}*2+.75) {};
+
+                \draw[blue] (P1) -- (U1);
+                \draw[blue] (P2) -- (U2);
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P3) at (\value{r}*2.5+.4,-\value{c}*2) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P4) at (\value{r}*2.5+1.5-.4,-\value{c}*2) {};
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U3) at (\value{r}*2.5+.4,-\value{c}*2+.75) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U4) at (\value{r}*2.5+1.5-.4,-\value{c}*2+.75) {};
+
+                \draw[blue] (P3) -- (U3);
+                \draw[blue] (P4) -- (U4);
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P3) at (\value{r}*2.5+.4,-\value{c}*2) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P4) at (\value{r}*2.5+1.5-.4,-\value{c}*2) {};
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U3) at (\value{r}*2.5+.4,-\value{c}*2+.75) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U4) at (\value{r}*2.5+1.5-.4,-\value{c}*2+.75) {};
+
+                \draw[blue] (P3) -- (U3);
+                \draw[blue] (P4) -- (U4);
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=2pt] (U4) at (\value{r}*2.5+1.5/2,-\value{c}*2+.375) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=2pt] (U4) at (\value{r}*2.5+1.5/2+.15,-\value{c}*2+.375) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=2pt] (U4) at (\value{r}*2.5+1.5/2-.15,-\value{c}*2+.375) {};
+            }
+
+            \addtocounter{r}{-1}
+            \ifnum\value{r}>-1
+            \repeat
+
+        \node at (.75,-2.5) {$T_5$}; \node at (3.25,-2.5) {$Q_3^\prime$};
+        \node at (5.75,-2.5) {$T_4$}; \node at (8.25,-2.5) {$Q_2^\prime$};
+        \node at (10.75,-2.5) {$T_3$}; \node at (13.25,-2.5) {$Q_1^\prime$};
+
+        \stepcounter{c}
+        \setcounter{r}{0}
+        \loop
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (A) at (\value{r}*2.5,-\value{c}*2) {};
+            \ifnum\value{r}=0
+                \draw[red] (A) -- (A0);
+            \fi
+            \ifnum \value{r}>0
+                \draw[red] (B) -- (A);
+            \fi
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (B) at (\value{r}*2.5+1.5,-\value{c}*2) {};
+
+            \draw (A)--(B);
+            \ifthenelse{\isodd{\value{r}}}{
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P1) at (\value{r}*2.5+.2,-\value{c}*2) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P2) at (\value{r}*2.5+1.5-.2,-\value{c}*2) {};
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U1) at (\value{r}*2.5+.2,-\value{c}*2+.75) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U2) at (\value{r}*2.5+1.5-.2,-\value{c}*2+.75) {};
+
+                \draw[blue] (P1) -- (U1);
+                \draw[blue] (P2) -- (U2);
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P3) at (\value{r}*2.5+.4,-\value{c}*2) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P4) at (\value{r}*2.5+1.5-.4,-\value{c}*2) {};
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U3) at (\value{r}*2.5+.4,-\value{c}*2+.75) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U4) at (\value{r}*2.5+1.5-.4,-\value{c}*2+.75) {};
+
+                \draw[blue] (P3) -- (U3);
+                \draw[blue] (P4) -- (U4);
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=2pt] (U4) at (\value{r}*2.5+1.5/2,-\value{c}*2+.375) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=2pt] (U4) at (\value{r}*2.5+1.5/2+.15,-\value{c}*2+.375) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=2pt] (U4) at (\value{r}*2.5+1.5/2-.15,-\value{c}*2+.375) {};
+            }{}
+
+            \stepcounter{r}
+            \ifnum\value{r}<6
+            \repeat
+
+        \node at (.75,-4.5) {$Q_4^\prime$}; \node at (3.25,-4.5) {$T_6$};
+        \node at (5.75,-4.5) {$Q_5^\prime$}; \node at (8.25,-4.5) {$T_7$};
+        \node at (10.75,-4.5) {$Q_6^\prime$}; \node at (13.25,-4.5) {$T_8$};
+
+        \stepcounter{c}
+        \setcounter{r}{5}
+        \loop
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (A\ther) at (\value{r}*2.5,-\value{c}*2) {};
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (B\ther) at (\value{r}*2.5+1.5,-\value{c}*2) {};
+            \ifnum\value{r}=5
+                \draw[red] (B\ther) -- (B);
+            \fi
+            \ifnum\value{r}<5
+                \setcounter{n}{\value{r}}
+                \stepcounter{n}
+                \draw[red] (B\ther) -- (A\then);
+            \fi
+
+            \draw (A\ther)--(B\ther);
+
+            \ifthenelse{\isodd{\value{r}}}{}{
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P1) at (\value{r}*2.5+.2,-\value{c}*2) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P2) at (\value{r}*2.5+1.5-.2,-\value{c}*2) {};
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U1) at (\value{r}*2.5+.2,-\value{c}*2+.75) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U2) at (\value{r}*2.5+1.5-.2,-\value{c}*2+.75) {};
+                \draw[blue] (P1) -- (U1);
+                \draw[blue] (P2) -- (U2);\node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P3) at (\value{r}*2.5+.4,-\value{c}*2) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P4) at (\value{r}*2.5+1.5-.4,-\value{c}*2) {};
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U3) at (\value{r}*2.5+.4,-\value{c}*2+.75) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U4) at (\value{r}*2.5+1.5-.4,-\value{c}*2+.75) {};
+
+                \draw[blue] (P3) -- (U3);
+                \draw[blue] (P4) -- (U4);
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=2pt] (U4) at (\value{r}*2.5+1.5/2,-\value{c}*2+.375) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=2pt] (U4) at (\value{r}*2.5+1.5/2+.15,-\value{c}*2+.375) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=2pt] (U4) at (\value{r}*2.5+1.5/2-.15,-\value{c}*2+.375) {};
+            }
+
+            \addtocounter{r}{-1}
+            \ifnum\value{r}>-1
+            \repeat
+
+        \node at (.75,-6.5) {$T_{11}$}; \node at (3.25,-6.5) {$Q_9^\prime$};
+        \node at (5.75,-6.5) {$T_{10}$}; \node at (8.25,-6.5) {$Q_8^\prime$};
+        \node at (10.75,-6.5) {$T_9$}; \node at (13.25,-6.5) {$Q_7^\prime$};
+
+        \stepcounter{c}
+        \setcounter{r}{0}
+        \loop
+
+            \ifnum\value{r}=0
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (a) at (\value{r}*2.5,-\value{c}*2) {};
+                \draw[red] (a) -- (A0);
+            \fi
+            \ifnum\value{r}>0
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (A) at (\value{r}*2.5,-\value{c}*2) {};
+                \ifnum \value{r}=1
+                    \draw[red] (A) -- (a);
+                \fi
+                \ifnum \value{r}>1
+                    \draw[red] (B) -- (A);
+                \fi
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (B) at (\value{r}*2.5+1.5,-\value{c}*2) {};
+
+                \draw (A)--(B);
+
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P1) at (\value{r}*2.5+.2,-\value{c}*2) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P2) at (\value{r}*2.5+1.5-.2,-\value{c}*2) {};
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U1) at (\value{r}*2.5+.2,-\value{c}*2+.75) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U2) at (\value{r}*2.5+1.5-.2,-\value{c}*2+.75) {};\node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P3) at (\value{r}*2.5+.4,-\value{c}*2) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P4) at (\value{r}*2.5+1.5-.4,-\value{c}*2) {};
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U3) at (\value{r}*2.5+.4,-\value{c}*2+.75) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U4) at (\value{r}*2.5+1.5-.4,-\value{c}*2+.75) {};
+
+                \draw[blue] (P3) -- (U3);
+                \draw[blue] (P4) -- (U4);
+
+                \node [circle, fill=black, inner sep=0pt, minimum size=2pt] (U4) at (\value{r}*2.5+1.5/2,-\value{c}*2+.375) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=2pt] (U4) at (\value{r}*2.5+1.5/2+.15,-\value{c}*2+.375) {};
+                \node [circle, fill=black, inner sep=0pt, minimum size=2pt] (U4) at (\value{r}*2.5+1.5/2-.15,-\value{c}*2+.375) {};
+            \fi
+
+            \draw[blue] (P1) -- (U1);
+            \draw[blue] (P2) -- (U2);
+
+            \stepcounter{r}
+            \ifnum\value{r}<6
+            \repeat
+
+        \node at (.2,-8.5) {$Q_{10}^\prime$}; \node at (3.25,-8.5) {$T_{12}$};
+        \node at (5.75,-8.5) {$T_{13}$}; \node at (8.25,-8.5) {$T_{14}$};
+        \node at (10.75,-8.5) {$T_{15}$}; \node at (13.25,-8.5) {$T_{16}$};
+
+        \stepcounter{c}
+        \setcounter{r}{5}
+        \loop
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (A\ther) at (\value{r}*2.5,-\value{c}*2) {};
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (B\ther) at (\value{r}*2.5+1.5,-\value{c}*2) {};
+            \ifnum\value{r}=5
+                \draw[red] (B\ther) -- (B);
+            \fi
+            \ifnum\value{r}<5
+                \setcounter{n}{\value{r}}
+                \stepcounter{n}
+                \draw[red] (B\ther) -- (A\then);
+            \fi
+
+            \draw (A\ther)--(B\ther);
+
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P1) at (\value{r}*2.5+.2,-\value{c}*2) {};
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P2) at (\value{r}*2.5+1.5-.2,-\value{c}*2) {};
+
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U1) at (\value{r}*2.5+.2,-\value{c}*2+.75) {};
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U2) at (\value{r}*2.5+1.5-.2,-\value{c}*2+.75) {};
+
+            \draw[blue] (P1) -- (U1);
+            \draw[blue] (P2) -- (U2);
+
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P3) at (\value{r}*2.5+.4,-\value{c}*2) {};
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (P4) at (\value{r}*2.5+1.5-.4,-\value{c}*2) {};
+
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U3) at (\value{r}*2.5+.4,-\value{c}*2+.75) {};
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (U4) at (\value{r}*2.5+1.5-.4,-\value{c}*2+.75) {};
+
+            \draw[blue] (P3) -- (U3);
+            \draw[blue] (P4) -- (U4);
+
+            \node [circle, fill=black, inner sep=0pt, minimum size=2pt] (U4) at (\value{r}*2.5+1.5/2,-\value{c}*2+.375) {};
+            \node [circle, fill=black, inner sep=0pt, minimum size=2pt] (U4) at (\value{r}*2.5+1.5/2+.15,-\value{c}*2+.375) {};
+            \node [circle, fill=black, inner sep=0pt, minimum size=2pt] (U4) at (\value{r}*2.5+1.5/2-.15,-\value{c}*2+.375) {};
+
+            \addtocounter{r}{-1}
+            \ifnum\value{r}>4
+            \repeat
+
+        \node at (13.25,-10.5) {$T_{17}$};
+    \end{tikzpicture}
+    \caption{Construction of example $IG(X)$.}
+    \label{figure:IGNPCEIG}
+\end{figure}
+
+\subsection{NP-Completeness}
+
+\begin{lemma}\label{lemma:BNb(G)IG}
+Given that $Q_1,...,Q_n$ can be partitioned into $Q^{\prime\prime}_1,...,Q^{\prime\prime}_{3n}$ of orders in $X^\prime$, then burning number of $IG(X)$ is $2m+1$.
+\end{lemma}
+
+\begin{proof}
+Let 
+$P^\prime = \{Q^{\prime\prime}_1$, $...$, $Q^{\prime\prime}_{3n}$, $Q^\prime_1$, $...$, $Q^\prime_k$, $T_1$, $...$, $T_{m+1}\}$. Let $r_i$ be the $((2m+1)-i+1)^{th} = (2m-i+2)^{th}$ vertex on the $i^{th}$ largest sub path in $P^\prime$. Then, we can burn $P_I$ and subsequently $IG(X)$ if we put $2m+1$ fire sources such that the fire source $y_i$ is put on $r_i$ (from \Cref{corollary:Tone}, if $T_j$ is burnt by a single fire source, then $A_{T_j}$ is also burnt with the same). So, $S^\prime = (y_1,y_2,..,y_{2m+1})$ is a valid burning sequence in this case. This implies that $b(IG(X))\leq 2m+1$. Since the union of all sub paths in $P^\prime$ produces entire $P_I$ which is a path of length $(2m+1)^2$, we have $b(IG(X))\geq 2m+1$. Hence, $b(IG(X)) = 2m+1$.
+\end{proof}
+
+Let $P^\prime$ denote the set of all sub paths of $P_I$ such that $P^\prime = \{Q^{\prime\prime}_1$, $...$, $Q^{\prime\prime}_{3n}$, $Q^\prime_1$, $...$, $Q^\prime_k$, $T_1$, $...$, $T_{m+1}\}$.
+
+\begin{lemma}\label{lemma:EFSOnPath}
+Each fire source must be on $P_I$.
+\end{lemma}
+
+\begin{proof}
+If the all the fire sources are on $P_I$, then we have that\\ $G.N_{2m+1-i}[y_i]$ $\cap$ $P_I$\\
+is a path of order at most $2(2m+1-i)+1$.
+
+Let for contradiction that we put a fire source $y_i$ on any vertex adjacent to some vertex on $P_I$ and not on $P_I$, and $IG(X)$ can still be burnt within $2m+1$ steps (\Cref{lemma:BNb(G)IG}). Then we have that the subgraph induced by $G.N_{2m+1-i}[y_i]\cap P_I$ is a path of order less that $2(2m+1-i)+1$. This implies that (from \Cref{equation:burn-verify}) $|\cup_{i=1}^{2m+1}G.N_{2m+1-i}[y_i]\cap P_I|<(2m+1)^2$ which is a contradiction. Therefore each $y_i$ must be a put on some vertex on $P_I$.
+\end{proof}
+
+Let $S^\prime=(y_1,y_2,...,y_{2m+1})$ be an optimal burning sequence. Let $r_i$ be the $(2m-i+2)^{th}$ vertex on the $i^{th}$ largest sub path in $P^\prime$.
+Observe that $T_j$'s are the largest $m+1$ sub paths in $P^\prime$.
+
+\begin{lemma}\label{lemma:AFSOnr_iIG}
+We must have $y_i=r_i \forall\ 1\leq i\leq m+1$.
+\end{lemma}
+
+\begin{proof}
+We are going to prove this lemma using the strong induction hypothesis. We have that each $u_j$ must receive fire from a $y_i$ in $P_I$ (\Cref{lemma:EFSOnPath}). 
+For $i=1$, the only vertex connected to both $u^1_1$ and $u^{|T_1|-2}_1$ within a distance $2m+1-i=2m$ is $r_1$.
+Now we must have $y_1=r_1$, else, if we put $y_1$ somewhere else, then no other fire source can burn $A_{T_1}$ alone. 
+If we utilize more than one fire sources to burn $A_{T_j}$, then then at least one vertex of $T_1$ would be burnt by both of those two fire sources (\Cref{observation:overlap}), following that $P_I$ cannot be burnt completely (\Cref{lemma:notopt}) which is a contradiction.
+
+So, we must have that $y_1=r_1$. Let we need to have $y_k$ on $r_k$ for all $1\leq k\le m$. We need to show for $y_{k+1}$. After burning $T_k$, we must burn $T_{k+1}$ first of all, otherwise we will again obtain overlaps in the burning clusters of the fire sources and we will not be able to burn $P_I$ completely with is a contradiction.
+
+So, using strong induction hypothesis, we must have that $y_{k+1}=r_{k+1}$ to burn entire $A_{T_{k+1}}$ ($\forall\ 1\leq k\leq m$) since the only vertex connected to both $u^1_{k+1}$ and $u^{|T_{k+1}|-2}_{k+1}$  within distance $2m+1-(k+1)$ is $r_{k+1}$.
+\end{proof}
+
+We define $P^{\prime\prime}$ by $P^{\prime\prime} = IG(X)\setminus(A_{T_1}\cup A_{T_2}\cup ... \cup A_{T_{m+1}})$. Now we present the following lemma on burning this remaining graph $P^{\prime\prime}$.
+
+\begin{lemma}\label{lemma:PartPFx1TO31}
+There is a partition of $P^{\prime\prime}$, induced by the fire sources $y_i (m+1\leq i\leq 2m+1)$, into paths of orders in $F_m^\prime$.
+\end{lemma}
+
+\begin{proof}
+From \Cref{lemma:AFSOnr_iIG}, we have that $\forall\ 1\leq i\leq m+1$, all the vertices in $T_i$, along with all the vertices connected to it, shall be burnt by $y_i$. Therefore, we have to burn the vertices in $Q_1,...,Q_n,Q_1^\prime,...,Q_k^\prime$ by the fire sources $y_{m+2},x_{m+3},...,y_{2m+1}$ (the last $m$ sources of fire). Since $P^{\prime\prime}$ is a disjoint union of paths, so we have that $\forall\ m+2\leq i\leq 2m+1$, the subgraph induced by the vertices in $G.N_{2m+1-i}[y_i]$ is a path of length at most $2(2m+1-i)+1$. Moreover, we have that the path forest $P^{\prime\prime}$ is of order $\sum_{i=1}^{m}(2i-1)=m^2$. This implies that $\forall\ m+2\leq i\leq 2m+1$, the subgraph induced by the vertices in $G.N_{2m+1-i}[y_i]$ is a path of order equal to $2(2m+1-i)+1$, otherwise we cannot burn all the vertices of $P^{\prime\prime}$ which is a contradiction. Therefore there must be a partition of $P^{\prime\prime}$, induced by the burning sequence $y_{m+2},y_{m+3},...,y_{2m+1}$, into sub paths of order as per each element in $F_m^\prime$.
+\end{proof}
+
+\begin{theorem}\label{theorem:BIGNPCIG}
+Burning interval graphs optimally is NP-Complete.
+\end{theorem}
+
+\begin{proof}
+    Considering the partition provided in lemma \ref{lemma:PartPFx1TO31}, we claim that there is a partition of $P^{\prime\prime}$ into subpaths of order as per each element in $F_m^\prime$.
+    
+    On the other hand, let say we have a optimal solution of burning interval graphs. If each of the $Q_1^{\prime\prime},\dots,Q_{3n}^{\prime\prime}$ is burned by a single fire source, then it gives a solution for the distinct 3-partition problem.
+    
+    We apply the following process subject to each subpath $s$ in $Q_1^\prime,Q_2^\prime,\dots,Q_k^\prime$. Let that some subpath $s$ is burned using multiple fire sources such that the sum of the cluster sizes of these fire sources is exactly same as $|s|$. Now some fire source with cluster size $|s|$ must be present on some other subpath. We can interchange that fire source (whose cluster size is $|s|$) by these fire sources (which are presently burning $s$). This way we can make each subpath $s$ to be burnt by a single fire source whose cluster size is equal to $|s|$. This process takes $O(m)$ time.
+    
+    Hence we are left with $Q_1,Q_2,\dots,Q_n$ to burn. Therefore, we must part $Q_1,Q_2,\dots,Q_3$ into $Q^{\prime\prime}_1,Q^{\prime\prime}_2,\dots Q^{\prime\prime}_{3n}$ as per the orders in $X^\prime$. Equivalently we have to part $X$ as per the distinct 3-partition problem. Therefore, we have reduced the burning problem of $IG(X)$ to the distinct 3-partition problem in pseudo-polynomial time. Since, the distinct 3-partition problem is NP-Complete in the strong sense, burning $IG(X)$ is also NP-Complete in the strong sense. Therefore, burning interval graphs optimally is also NP-Complete in the strong sense.
+\end{proof}
+
+\section{Burning permutation graphs}\label{section:burn-permutation-graphs}
+
+\subsection{Permutation graph construction for NP-completeness}
+
+Let $X$ be an input set to a distinct 3-partition problem; let $n=\frac{|X|}{3}$, $m = \max (X)$, $B = \frac{s(X)}{n}$, and $k=m-3n$. Let $F_m$ be the set of first $m$ numbers, $F_m = \{1,2,3,...,m\}$, and $F^{\prime}_m$ be the set of first $m$ odd numbers, $F^\prime_m = \{2\ f_i-1: f_i \in F_m\} = \{1, 3, 5, . . ., 2m-1\}$. Let $X^\prime = \{2\ a_i-1:a_i \in X\}$, $B^\prime = \frac{s(X^\prime)}{n}$. Observe that $s(X^\prime) = \sum_{i=1}^{3n} 2\ a_i -1 = 2nB-3n$, so $B^\prime = 2B-3$. Let $Y=F^\prime_m\setminus X^\prime$. Let $O$ be the original sequence of numbers $1$ to $s(F^\prime_m)$, $O=(1,2,3,...,m^2)$.
+
+Now, we are going to construct $n+k$ permutations $P_1, P_2,..., P_{n+k}$ in a specific manner such that these will produce path forests of $(n+k)$ disjoint simple paths. Each $P_j$ is a permutation of the numbers $x_j$ to $y_j$ belonging $O$.
+Let $t_j=y_j-x_j+1$; then $P_j = \{p^1_j,p^2_j,...,p^{t_j}_j\}$.
+%$P_j = \{p_{x_j},p_{x_j+1},...,p_{y_j}$.
+We construct each $P_j$ based on the subsequence $(x_j,... y_j) \in O$ and each of the $p^h_j$ where $h \in [1, t_j]$. Below we first provide a formula to calculate $x_j$, $y_j$. We divide the range of $j$ in two parts, $1\leq j\leq n$ and $n+1\leq j\leq n+k$.
+
+We define $y_0=0$. Now $\forall\ 1\leq j\leq n$, $x_j = y_{j-1}+1,$ and $y_j = j \times B^\prime$.
+For the remaining values of $j$, i.e., $\forall\ 1\leq j\leq k$, $x_{n+j} = y_{n+j-1}+1$ and  $y_{n+j} = y_{n+j-1} + L^Y_j$, where $L^Y_j$ is the $j^{th}$ largest element of $Y$. See that, $y_{n+k} = y_n + s(F^\prime_m\setminus X^\prime) = nB^\prime + s(F^\prime_m\setminus X^\prime) = s(X^\prime) + s(F^\prime_m\setminus X^\prime) = s(F^\prime_m) = m^2$. Hence, total number of elements in $\bigcup^{n+k}_{j=1} P_j$ is $m^2$. Now we provide formula to find $p^h_j$ for each $j$ and all $h \in (1, t_j)$.\\
+
+\noindent If $t_j$ is even, then $\forall\ 1\leq j \leq n+k$, we define as follows:
+
+$\forall$ odd $i,\ 1 \leq i \leq (t_j-3), p^i_j = 2+(x_j+i-1)$.
+The only odd value of $i=t_j-1$ remains and we define it as, $p^{t_j-1}_j = y_j$.
+
+Further, $\forall$ even $i, 4 \leq i \leq t_j, p^i_j = i-2\}$ and for the remaining value of even $i=2$, we define $p^2_j = x_j$.\\
+
+\noindent Else, if $t$ is odd, then $\forall\ 1\leq j \leq n+k$, we define as follows:
+
+$\forall$ odd $i,\ 1 \leq i \leq t_j-2, p^i_j = 2+(x_j+i-1)$. The only odd value of $i=t_j$ remains and we define it as,  $p^{t_j}_j = y_j-1$.
+
+Further, $\forall$ even $i, 4 \leq i \leq t_j-1, p^i_j = (x_j+i-1)-2$ and for the remaining value of even $i=2$, we define $p^2_j = x_j$.\\
+
+We follow the above construction where we have to compute the permutation of an a subsequence of $O$ of length $5$ or above, that is if $y_j-x_j+1=t_j\geq 5$. If otherwise $t_j\leq 4$, we construct the permutation $P_j$ as follows. If $t_j=1$, then $P_j=(x_j)$. If $t_j=2$, then $P_j=(y_j,x_j)$. If $t_j=3$, then $P_j=(y_j,x_j,x_j+1)$. If $t_j=4$, then $P_j=(x_j+1,y_j,x_j,x_j+2)$.
+
+Now, $P$ $=$ $P_1$ $\cup_{s\setminus}$ $P_2$ $\cup_{s\setminus}$ $...$ $\cup_{s\setminus}$ $P_{n+k}$ $=$ $(p^1_1$, $p^2_1$, $...$, $p^{t_1}_1$, $p^1_2$, $p^2_2$, $...$, $p^{t_2}_2$, $...$, $p^1_{n+k}$, $p^2_{n+k}$, $...$, $p^{t_{n+k}}_{n+k})$ $=$ $(p_1$, $p_2$, $p_3$, $...$, $p_{m^2})$ is the subject permutation of $O$.
+
+We call $P(X)$ to be the permutation graph corresponding to the original sequence $O$, and its subject permutation $P$. $\forall\ 1\leq j\leq n+k$ let $Q_j$ be the subgraph in $P(X)$ induced by the permutation $P_j=(p^1_j,p^2_j,...,p^{t_j}_j)$ of the original sequence $(x_j,...,y_j)$. Observe that $P(X) = Q_1\cup Q_2\cup...\cup Q_{n+k}$ is a path forest where the paths $Q_1, Q_2,..., Q_{n+k}$ are disjoint from each other.
+
+The burning number of $P(X)$ is $m$. It follows trivially from the arguments that we have used in the proofs of \Cref{lemma:PartPFx1TO31} and \Cref{theorem:BIGNPCIG} to argue the burning procedure that should be followed to burn the path forest $P^{\prime\prime}$ because $P^{\prime\prime}$ is similar to $P(X)$.
+
+\subsection{Example construction}
+
+Let $X=\{10,11,12,14,15,16\} \implies n=2,\ m = 16,\ B = 39,$ and $k=10$. $F_m=\{1,2,...,16\}$, and $F_m^\prime=\{1,3,...,31\}$. $X^\prime = \{19,21,23,27,29,31\}$, $B^\prime = 75=2B-3$. $Y=$ $\{1$, $3$, $5$, $7$, $9$, $11$, $13$, $15$, $17$, $25\}$.
+
+We finally form paths $Q_1$ and $Q_2$ each of order of $75$. Also, we form paths $Q_3,Q_4,...,Q_{12}$ of order of $25,17,15,13,11,9,7,5,3,1$ respectively. $P(X)$ is a path forest of the paths $Q_1,...,Q_{12}$, which are disjoint from each other. Burning number of $P(X)$ in this case is $m=16$.
+
+The above example is followed from the general construct that we used to reduce burning permutation graph from a distinct 3-partition problem. In this example, we have constructed paths from subsequences (of $O$) of odd length only. For the sake of another example, let the original sequence be $(1,2,3,...,34).$ Let the $x_1=1, y_1=9, x_2=10, y_2=17, x_3=18, y_3=26, x_4=27, y_4=34$. Now the subject permutation of this sequence becomes $(3$, $1$, $5$, $2$, $7$, $4$, $9$, $6$, $8$, $12$, $10$, $14$, $11$, $16$, $13$, $17$, $15$, $20$, $18$, $22$, $19$, $24$, $21$, $26$, $23$, $25$, $29$, $27$, $31$, $28$ ,$33$, $30$, $34$, $32)$. The resultant permutation graph is a path forest of four paths of order of $9,8,9$ and $8$ respectively.
+This shows that we can induce a path forest of any shape and size (containing paths of both even and odd lengths) from a permutation of an original sequence.
+
+\subsection{NP-Completeness}
+
+The path forest induced by $Q_1,Q_2,\dots,Q_{n+k}$ is exactly same as the path forest $P^{\prime\prime}$ of $IG(X)$ that we constructed in \Cref{section:burn-interval-graphs}. So here also $G$ can be burnt optimally only if $Q_1, Q_2, ..., Q_{n+k}$ can be broken into paths of length in $F^\prime_m$ which can happen iff $Q_1,\dots,Q_n$ can be broken into the subpaths $W_1,W_2,\dots,W_{3n}$ of lengths in $X^\prime$ as per the distinct 3-partition problem. Therefore, by the arguments similar to those in the proofs of \Cref{lemma:PartPFx1TO31} and \Cref{theorem:BIGNPCIG}, we have \Cref{theorem:BPGNPC} as follows.
+
+\begin{theorem}\label{theorem:BPGNPC}
+    Burning of general permutation graphs optmally is NP-Complete.
+\end{theorem}\qed
+
+\section{Burning disk graphs}\label{section:burn-disk-graphs}
+
+\subsection{Disk graph construction for NP-completeness}
+
+Let $X$ be an input set to a distinct 3-partition problem; let $n=\frac{|X|}{3}$, $m = \max (X)$, $B = \frac{s(X)}{n}$, and $k=m-3n$. Let $p=m-1$.
+
+Let $C^\prime$ be a circle of radius $R^\prime$. Let there be a set $Cir$ of $q$ disks $\{c_1, c_2, ..., c_q\}$ of unit radius placed around $C^\prime$ such that their circumference touches circumference of $C^\prime$, but they do not overlap with each other, or with $C^\prime$. The maximum value that $q$ can take is limited. As an example, we can put a maximum of 6 unit radius disks around a disk of unit radius. As the radius $R^\prime$ of the central disk tends to $\infty$, the amount of unit radius disks that we can put tends to $R^\prime\times\pi$ \cite{Marathe1995}. In our construction, the value of $R^\prime$ is chosen such that we can put $q\geq 2(p+2)$ (and $q\leq 3p$ to ensure that the setting of disks that we construct can be constructed in time polynomial to the underlying distinct 3-partition instance) disks of unit radius around $C^\prime$.
+
+We give the definition of \textit{disk-chain} (of a certain size) below.
+\begin{definition}\label{definition:DCSizeKDG}{Disk-chain of size} {$k$}. A disk-chain of size $k$ is a sequence of disks $Ch_x = (c_x^1, c_x^2, c_x^3, ..., c_x^k)$ such that $c_x^1$ overlaps only with $c_x^2$, $c_x^k$ overlaps only with $c_x^{k-1}$, and $\forall\ 2\leq j\leq k-1,\ c_x^j$ overlaps only with $c_x^{j-1}$ and $c_x^{j+1}$.
+\end{definition}
+
+$1\leq i\leq q$, let that a disk chain of size $p$, $Ch_i=\{c_i^1,c_i^2,...,c_i^p\}$, is attached to each circle $c_i$ such that, apart from the overlaps that give it a chain structure, $c_i^1$ overlaps with $c_i$ and $c_i^2$ only. 
+Let $Ch$ be the set of all these $q$ chains, $Ch = \{Ch_i\}_{i=1}^{q}$.
+
+Let there be a disk $C$ of radius $R: R^\prime < R \leq R^\prime + 0.5$ is positioned with its its center exactly at the center of $C^\prime$ defined above. Observe that all the disks in $Cir$ now overlap with $C$. Now consider the corresponding disk graph. Let the vertex corresponding to $C$ be called head $h$, vertices corresponding to $c_i$ be called $v_i$, and the vertices corresponding to $c_i^j$ be called $v_i^j$, $\forall\ 1 \leq i \leq q$, and $\forall\ 1 \leq j \leq p$.
+
+We shall call this setting of disks $DK(R,r,q,p,C,Cir,Ch)$. This setting of disks correspond to the graph $SP(q,p+1)$. Now we are going to extend $DK(R,r,q,p,C,Cir,Ch)$ by adding more disks to it; in fact, we are going to add chains at the terminus of the chains that are already present, which we can do very easily. Before that, let us define what do we mean by attaching disk chain behind another disk chain.
+
+\begin{definition}\label{AttachDCDG}
+\textbf{Attaching a disk-chain behind another}. If disk-chain $C_1 = (c_1^1, c_1^2, c_1^3, ..., c_1^{k_1})$ is attached behind another chain $C_2 = (c_2^1, c_2^2, c_2^3, ..., c_2^{k_2})$, a new chain is formed $Ch_{FIN}$ $=$ $c_2^1$, $c_2^2$, $c_2^3$, $\dots$, $c_2^{k_2}$, $c_1^1$, $c_1^2$, $c_1^3$, $\dots$, $c_1^{k_1}$. Clearly, this attachment is done in such a manner that $c_1^1$ overlaps only with $c_2^{k_2}$ and $c_1^2$.
+\end{definition}
+
+Let $F_m$ be the set of first $m$ numbers, $F = \{1,2,3,...,m\}$, and $F^{\prime}_m$ be the set of first $m$ odd numbers, $F^\prime_m = \{2\ f_i-1: f_i \in F_m\} = \{1, 3, 5, . . ., 2m-1\}$. Let $X^\prime = \{2\ a_i-1:a_i \in X\}$, $B^\prime = \frac{s(X^\prime)}{n}$. Observe that $s(X^\prime) = \sum_{i=1}^{3n} 2\ a_i -1 = 2nB-3n$, so $B^\prime = 2B-3$. Let $Y=F^\prime_m\setminus X^\prime$.
+
+Let there be $n$ disk-chains $Q_1,Q_2...,Q_n$, each of size $B^\prime$. $\forall\ 1\leq j\leq k$, let $Q_{n+j}$ be a disk chain of size $L^Y_i$, where $L^Y_i$ is the $i^{th}$ largest element of $Y$.
+
+We now attach disk-chains $Q_1,Q_2...,Q_{n+k}$ behind $Ch_1$, $Ch_2$, $\dots$, $Ch_{n+k}$ respectively. In the corresponding disk graph, let $P_i^\prime$ be the path induced by the disk chain $Q_i$, $\forall\ 1\leq i\leq n+k$.
+
+Let the corresponding disk graph of this updated setting of disks be called $DK(X)$.
+
+\subsection{Example construction}
+
+Let $X=\{10,11,12,14,15,16\} \implies n=2,\ m = 16,\ B = 39,$ and $k=10$, $p=15$.
+
+Let $R^\prime=10$, then we can attach $q=34$ chains each of length $p$. Take $R=10.5$.
+
+$F_m=\{1,2,...,16\}$, and $F_m^\prime=\{1,3,...,31\}$. $X^\prime =$ $\{19$, $21$, $23$, $27$, $29$, $31\}$, $B^\prime = 75=2B-3$. $Y=\{1,3,5,7,9,11,13,15,17,25\}$.
+
+We finally obtain paths $P^\prime_1$ and $P^\prime_2$ each of order of $75$. Also, we form paths $P^\prime_3,P^\prime_4,...,P^\prime_{12}$ of order of $25,17,15,13,11,9,7,5,3,1$ respectively..
+
+The central spider graph formed is $SP(34,16)$, and $P^\prime_1,P^\prime_2,...,P^\prime_{12}$ are attached to $v_1^{15},v_2^{15},...,v_{12}^{15}$ respectively at vertices on one of their ends.
+
+Construction of this example $DK(X)$ is demonstrated in \Cref{figure:EDKXDG}. Burning number of $DK(X)$ in this case is $m+1=17$.
+
+\begin{figure}
+    \begin{minipage}{1\textwidth}
+        \centering
+        \begin{tikzpicture}[scale=1.2]
+
+            \setcounter{n}{34}
+            \setcounter{r}{2}
+            \setcounter{d}{6}
+
+            \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (A) at (0,0) {};
+            \setcounter{c}{1}
+            \loop
+
+                \ifnum \value{c} > 3
+                    \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (B) at ({\value{r}*cos(\value{c}*360/(\value{n}-1))},{\value{r}*sin(\value{c}*360/(\value{n}-1))}) {};
+                \fi
+
+                \ifnum \value{c} < 8
+
+                    \node [circle, fill=black, inner sep=0pt, minimum size=3pt, label=above:{$v_{\thed}^{15}$}] (B) at ({\value{r}*cos(\value{c}*360/(\value{n}-1))},{\value{r}*sin(\value{c}*360/(\value{n}-1))}) {};
+
+                    \node [circle, fill=black, inner sep=0pt, minimum size=3pt, label=right:{$Q_{\thed}$}] (C) at ({\value{r}*cos(\value{c}*360/(\value{n}-1))+2},{\value{r}*sin(\value{c}*360/(\value{n}-1))+.1*\value{c}}) {};
+
+                    \draw (B) -- (C);
+                \fi
+
+                \ifnum \value{c} > 28
+
+                    \node [circle, fill=black, inner sep=0pt, minimum size=3pt, label=below:{$v_{\thed}^{15}$}] (B) at ({\value{r}*cos(\value{c}*360/(\value{n}-1))},{\value{r}*sin(\value{c}*360/(\value{n}-1))}) {};
+
+                    \node [circle, fill=black, inner sep=0pt, minimum size=3pt, label=right:{$Q_{\thed}$}] (C) at ({\value{r}*cos(\value{c}*360/(\value{n}-1))+2},{\value{r}*sin(\value{c}*360/(\value{n}-1))-.1*(34-\value{c})}) {};
+
+                    \draw (B) -- (C);
+                \fi
+
+                \draw (A) -- (B);
+
+                \stepcounter{c}
+                \stepcounter{d}
+
+                \ifnum \value{d}=34
+                    \setcounter{d}{1}
+                \fi
+
+                \ifnum \value{c} < \value{n}
+                    \repeat
+
+        \end{tikzpicture}
+    \end{minipage}
+    \caption{Construction of example $DK(X)$.}
+    \label{figure:EDKXDG}
+\end{figure}
+
+\subsection{NP-Completeness}
+
+Observe that $G$ can be burnt optimally only if $P_1^\prime, P_2^\prime, ..., P_{n+k}^\prime$ can be broken into paths of length in $F^\prime_m$ iff $P_1^\prime,\dots,P_n^\prime$ can be broken into the subpaths $W_1,W_2,\dots,W_{3n}$ of lengths in $X^\prime$ as per the distinct 3-partition problem.
+Let the final set of subpaths that we desire be $P_P=\{W_1,W_2,\dots,W_{3n},P_{n+1},\dots,P_{n+k}\}$. We have that $|P|=m$. Let $r_i$ ($\forall\ 2\leq i\leq m+1$) be the middle vertex on the $(i-1)^{th}$ largest subpath in $P_P$. Let $r_1$ be the head vertex $h$ of the spider graph $SP(q,p+1)$ induced by $DK(R,r,q,p,C,Cir,Ch)$. $r_1$ will be able to burn $SP(q,p+1)$ because $p=m-1$. So we have that the graph can be burned by the burning sequence $S^\prime=(r_1,r_2,\dots,r_{m+1})$ of length $m+1$. Hence we have \Cref{lemma:b(DK(X))-leq-m+1} as follows.
+
+\begin{lemma}\label{lemma:b(DK(X))-leq-m+1}
+    $b(DK(X))\leq m+1$.
+\end{lemma}\qed
+
+In \Cref{lemma:first-fire-source-BDG}, we show that the first fire source must be placed at $r_0$, which is stated as follows.
+
+\begin{lemma}\label{lemma:first-fire-source-BDG}
+    The first fire source must be placed at $r_0$ (the head vertex $h$).
+\end{lemma}
+
+\begin{proof}
+    Let for contradiction that the first fire source is not placed at $h$, an we can still burn $DK(X)$ in $m+1$ time steps. From here, we have that $r_0$ will not be able to burn at least $q-1$ leaf nodes of $SP(q,p+1)$ induced by $DK(R,r,q,p,C,Cir,Ch)$. According to our construction, we only have $n+k<m=p+1$ subpaths ($Q_i$'s) attached to $SP(q,p+1)$. So we have that more than $p+1$ unburned leaf nodes are not attached to any subpaths.
+    
+    Any fire source $r_2,...,r_{m+1}$ will not be able to burn more than one leaf nodes of $SP(q,p+1)$ because distance between any two leaf nodes is $2(p+1)=2m$. So even if we ignore those unburned leaf nodes which are attached to some subpath ($Q_i$), we have that all the fire sources $r_2,...,r_{m+1}$ together will not be able to burn $SP(q,p+1)$. This is a contradiction to our assumption because $DK(X)$ will not be burned in $m+1$ time steps.
+\end{proof}
+
+Now we have that the path forest induced by $P_1^\prime,P_2^\prime,\dots,P_{n+k}^\prime$ which is exactly same as the path forest $P^{\prime\prime}$ of $IG(X)$ that we constructed in \Cref{section:burn-interval-graphs}. So it follows trivially by the arguments similar to those in the proofs of \Cref{lemma:PartPFx1TO31} and \Cref{theorem:BIGNPCIG} that (1) $b(DK(X))=m+1$, and (2) the optimal burning of $DK(X)$ is NP-Complete. Therefore, we have \Cref{lemma:b(DK(X))=m+1} and \Cref{theorem:BDGNPC} as follows.
+
+\begin{lemma}\label{lemma:b(DK(X))=m+1}
+    $b(DK(X))= m+1$.
+\end{lemma}\qed
+
+\begin{theorem}\label{theorem:BDGNPC}
+    Burning disk graphs optimally is NP-Complete even if the underlying disk representation is given.
+\end{theorem}\qed
+
+%\section{Burning trees with maximum degree 3}the underlying figure is of the graph drawn in \cite{Bessy2017} for the subject of subsection.
+
+% \begin{figure}
+%     \begin{minipage}{1\textwidth}
+%         \centering
+%         \begin{tikzpicture}
+%             \newcounter{m}\setcounter{m}{18}
+%             \setcounter{n}{2}
+%             \newcounter{k}\setcounter{k}{10}
+            
+%             \newcounter{nplusk}
+%             \setcounter{nplusk}{\value{n}}
+%             \addtocounter{nplusk}{\value{k}}
+            
+%             \newcounter{px}\newcounter{py}
+%             \setcounter{px}{0} \setcounter{py}{0}
+            
+%             \setcounter{c}{1}
+%             \setcounter{d}{-1}
+            
+%             \loop
+%                 \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (A) at (\value{px},\value{py}) {};
+%                 \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (B) at (\value{px}+.5,\value{py}) {};
+%                 \node [circle, fill=black, inner sep=0pt, minimum size=3pt, label=above:{$r_{\thec}$}] (C) at (\value{px}+.5+.25,\value{py}+.5) {};
+%                 \node [circle, fill=black, inner sep=0pt, minimum size=3pt, label=below:{$v_{\thec}$}] (D) at (\value{px}+.5+.25,\value{py}-.25) {};
+%                 \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (E) at (\value{px}+.5+.5,\value{py}) {};
+            
+%                 \draw (A) -- (B);
+%                 \draw (B) -- (C);
+%                 \draw (C) -- (D);
+%                 \draw (C) -- (E);
+                
+%                 \node at (\value{px}+.5+.25,\value{py}-1) {{\boldmath$T_{\thec}$}};
+                
+%                 \ifnum \value{c} < 3
+%                     \node at (\value{px}+.25,\value{py}+.375) {$Q_{\thec}$};
+%                 \fi
+%                 \ifnum \value{c} > 2
+%                     \node at (\value{px}+.25,\value{py}+.375) {$Q_{\thed}^{\prime}$};
+%                 \fi
+                
+%                 \addtocounter{px}{1}
+%                 \addtocounter{c}{1}
+%                 \addtocounter{d}{1}
+                
+%                 \ifnum \value{c} < \value{nplusk}
+%                 \repeat
+            
+%             \draw (\value{px},\value{py}) -- (\value{px},\value{py}-1.5);
+%             \draw (\value{px},\value{py}-1.5) -- (\value{px}-10,\value{py}-1.5);
+%             \draw (\value{px}-10,\value{py}-1.5) -- (\value{px}-10,\value{py}-3);
+%             \draw (\value{px}-10,\value{py}-3) -- (\value{px}-9,\value{py}-3);
+%             \addtocounter{px}{-9}
+%             \addtocounter{py}{-3}
+            
+%             \newcounter{e}
+%             \setcounter{e}{\value{c}}
+%             \addtocounter{e}{-2}
+%             \node at (\value{px}-1.5,\value{py}+.75) {$Q_{\thee}^{\prime}$};
+            
+%             \loop
+%                 \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (A) at (\value{px},\value{py}) {};
+%                 \node [circle, fill=black, inner sep=0pt, minimum size=3pt, label=above:{$r_{\thec}$}] (B) at (\value{px}+.5,\value{py}+1) {};
+%                 \node [circle, fill=black, inner sep=0pt, minimum size=3pt, label=below:{$v_{\thec}$}] (C) at (\value{px}+.5,\value{py}-.5) {};
+%                 \node [circle, fill=black, inner sep=0pt, minimum size=3pt] (D) at (\value{px}+1,\value{py}) {};
+                
+%                 \draw (A) -- (B);
+%                 \draw (B) -- (C);
+%                 \draw (B) -- (D);
+                
+%                 \node at (\value{px}+.5,\value{py}-1.25) {{\boldmath$T_{\thec}$}};
+                
+%                 \addtocounter{px}{1}
+%                 \addtocounter{c}{1}
+                
+%                 \ifnum \value{c} < \value{m}
+%                 \repeat
+%         \end{tikzpicture}
+%     \end{minipage}
+%     \caption{Construction of $T(X)$. Intermediate vertices are not shown.}
+% \end{figure}
+
+\section{Corollary NP-Hard results}
+
+Although the following NP-Completeness have been shown in \cite{Bessy2017}, our constructions in \Cref{section:burn-interval-graphs} imply the corollaries in \Cref{subsection:burn-trees}, \Cref{subsection:burn-chordal-graphs}, \Cref{subsection:burn-planar-graphs}, \Cref{subsection:burn-bipartite-graphs},the constructions in \Cref{section:burn-permutation-graphs} imply the corollary in \Cref{subsection:burn-path-forests}, the constructions in \Cref{section:burn-disk-graphs} imply the corollary in \Cref{subsection:burn-spider-graphs}, and the constructions in \Cref{section:burn-interval-graphs} and \Cref{section:burn-permutation-graphs} together imply the corollary in \Cref{subsection:burn-forests}. Finally, since we have already discussed in \Cref{section:burning-verify} that verification of the correctness of a burning sequence can be done in polynomial time, we have that the graph burning problem is NP-Complete which we state formally in \Cref{subsection:burn-general-graphs-NPC} as \Cref{corollary:burn-general-graphs-NPC}.
+
+\subsection{Burning trees with maximum degree 3}\label{subsection:burn-trees}
+
+\begin{corollary}
+    The optimal burning of trees with maximum degree $3$ is NP-Complete.
+\end{corollary}
+
+\subsection{Burning chordal graphs}\label{subsection:burn-chordal-graphs}
+
+\begin{corollary}
+    The optimal burning of chordal graphs is NP-Complete.
+\end{corollary}
+
+\subsection{Burning planar graphs}\label{subsection:burn-planar-graphs}
+
+\begin{corollary}
+    The optimal burning of planar graphs is NP-Complete.
+\end{corollary}
+
+\subsection{Burning bipartite graphs}\label{subsection:burn-bipartite-graphs}
+
+\begin{corollary}
+    The optimal burning of bipartite graphs is NP-Complete.
+\end{corollary}
+
+\subsection{Burning path forests}\label{subsection:burn-path-forests}
+
+\begin{corollary}
+    The optimal burning of path forests is NP-Complete.
+\end{corollary}
+
+\subsection{Burning spider graphs}\label{subsection:burn-spider-graphs}
+
+\begin{corollary}
+    The optimal burning of spider graphs is NP-Complete.
+\end{corollary}
+
+\subsection{Burning forests of maximum degree 3}\label{subsection:burn-forests}
+
+\begin{corollary}
+    The optimal burning of forests of maximum degree $3$ is NP-Complete.
+\end{corollary}
+
+\subsection{NP-Completeness of general graph burning}\label{subsection:burn-general-graphs-NPC}
+
+\begin{corollary}\label{corollary:burn-general-graphs-NPC}
+    The optimal burning of general graphs is an NP-Complete problem.
+\end{corollary}
+
+% bibliography{ref.bib}
+% \bibliographystyle{plain}

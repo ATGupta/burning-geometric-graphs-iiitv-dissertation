@@ -1,0 +1,112 @@
+\chapter{Other games and problems}\label{chapter:other-games-and-problems}
+
+In this chapter, we are going to describe some problems which are related to the graph burning problem, and some problems which we utilize in the following chapters to prove various properties of graph burning.
+
+\section{Distinct 3-partition problem}\label{section:d3pp}
+
+\index{distinct 3-partition problem}For definition of the distinct 3-partition problem, see \Cref{section:problems-in-NP}. \cite{Hulett2008} have showed that the distinct $3$-partition problem is NP-Complete in the strong sense. So as per our discussion in \Cref{section:strong-NPC}, we have that if each element of the input set is bounded above by the polynomial in the length of the input, then the distict 3-partition problem still remains NP-Complete.
+
+We have from \Cref{lemma:ptr-npc} and \cref{lemma:pptr-npc} in \Cref{section:ptr-pptr-npc} that if a problem $B$ (which is NP-Complete in the strong sense) is reducible (in polynomial or pseudo-polynomial time) to another problem $B^\prime$ which is in NP, we have that $B^\prime$ is also an NP-Complete problem in the strong sense. We reduce several problems from the distinct 3-partition problem in the following chapters to show the NP-Completeness of various graph burning subproblems (in the strong sense).
+
+\section{Firefighter problem}
+
+\index{firefighter problem}The firefighting game, in combination with graph burning, can be used to model, for example, various ``real-life'' social scenarios where (communicable) diseases are spread. We also discuss (briefly) majorly in the conclusion how the firefighting game can be used to model the hindrance to the spread of a disease (the spread of which, we can model through graph burning). In fact, firefighter was introduced (in \cite{Hartnell1995}) to capture several important applications which included immunization of a population against a virus. In this section, we briefly discuss the firefighter problem. For the definition of the firefighter problem, see \Cref{section:related-games}.
+
+In the firefighter problem, we input an arbitrary graph $G$, and a vertex $s\in G.V$ which is the initial fire source. After the computation of a firefighting process, a sequence of vertices $S$ is generated which is used, (sequentially) one vertex in each round, to put the firefighter on, and thus, protect it the spread of fire. Once a vertex is protected, it cannot be burnt (and so it can also not spread the fire). \Cref{lemma:verify-firefighter} was proved in \cite{Fomin2016}.
+
+\begin{lemma}\label{lemma:verify-firefighter}
+We can verify the solution for a firefighter problem on a graph $G$ of $n$ vertices and $m$ edges with a fire source $s$ in $O(n+m)$ time. \cite{Fomin2016}
+\end{lemma}
+
+\begin{proof}
+The input is $G$, $s$, and a sequence $S$ of vertices where the firefighter is placed in the (same) sequence of time steps. The vertices on which firefighter is placed till step $i$ is $S_i = S[1:i-1]$, an algorithm is described as \Cref{lemma:verify-firefighter}.
+
+\begin{algorithm}\label{algorithm:verify-firefighter}
+Given the input $(G,s,S)$, perform the following steps.
+\end{algorithm}
+
+\textbf{\textit{Stage 1.}} $B=\{s\}$ (stores the set of vertices which have been burnt). $k=|S|$.
+
+\textbf{\textit{Stage 2.}} $\forall\ 2\leq i\leq k$, perform the following steps.
+
+\textbf{\textit{Stage 2.1.}} If $S[i]\in T$, then return $false$.
+
+\textbf{\textit{Stage 2.2.}} $B=B\cup (G\setminus S[1:i-1]).Adj[B]$.
+
+\textbf{\textit{Stage 3.}} If $B\cup (G\setminus S).Adj[B]=B$ (that is, if fire can spread no more), then return $true$, else return $false$.
+\end{proof}
+
+\begin{corollary}
+    The firefighter problem is in NP.
+\end{corollary}
+
+\begin{lemma}
+    The firefighter and the firefighter reserve deployment problem are the same. \cite{Fomin2016}
+\end{lemma}
+
+\begin{proof}
+    Followed by the definitions (see definitions of both in \Cref{section:related-games}).
+\end{proof}
+
+\begin{lemma}\label{lemma:firefighter-path-from-s}
+Given the instance $(G, s)$ of a firefighter problem if $l$ is the number of vertices in a longest induced path in $G$, starting in $s$, then no optimal strategy can place firefighter on more than $l-1$ vertices. \cite{Fomin2016}
+\end{lemma}
+
+\begin{proof}
+Let the firefighter sequence be $S=(v_1, v_2, . . ., v_t)$. Let $P$ be a path between $v_t$ and $s$ such that all vertices in $P$ burn, except $v_t$. Let that $P$ is the only path with this property. $\implies |P|\geq t+1$, or otherwise not have protected $v_t$ in $t^{th}$ step. Therefore, $t\leq l-1$.
+\end{proof}
+
+\begin{theorem}\label{theorem:firefight-P-k-free}
+Firefighter problem can be solved in $O(n^{k-2}(n+e)) = O(n^k)$ time for $P_k$-free graphs. \cite{Fomin2016}
+\end{theorem}
+
+\begin{proof}
+In a $P_k$-free graph $G$, the longest induced path is of length $k-1$. By \Cref{lemma:firefighter-path-from-s}, any optimal strategy protects at most $k-2$ vertices.
+\end{proof}
+
+Proof of \Cref{theorem:firefight-P-k-free} suggests the algorithm \Cref{algorithm:firefight-P-k-free} as follows, which is able to perform the firefighting problem in a $P_k$-free graph $G$ in $O(n^{k-2}(n+m))$ time (where $n$ is the number of vertices in $G$ and $m$ is the number of edges in it).
+
+\begin{algorithm}\label{algorithm:firefight-P-k-free}
+    Given an input graph $G$, perform the following steps.
+\end{algorithm}
+
+\textbf{\textit{Stage 1.}} Enumerate all ordered subsets $S \subseteq V(G)$ of size at most $k-2$ in $n^{k-2}$ time.
+
+\textbf{\textit{Stage 2.}} For each $S$, perform the following steps.
+
+\textbf{\textit{Stage 2.1.}} Verify by lemma \thech.2 that it is a valid firefighter sequence in $O(n+m)$ time.
+
+\textbf{\textit{Stage 2.3.}} If $S$ is a valid firefighter sequence, then return $S$.\\
+
+\Cref{corollary:firefight-split-graphs} has been proved in \cite{Fomin2016}.
+
+\begin{corollary}\label{corollary:firefight-split-graphs}
+    Firefighter problem can be solved on split graphs in polynomial time.\cite{Fomin2016}.
+\end{corollary}
+
+\begin{proof}
+    Since split graphs are $P_5$ free graphs, this corollary follows from \Cref{theorem:firefight-P-k-free}.
+\end{proof}
+
+\section{Firefighting general graphs}
+
+\Cref{algorithm:firefight-general-graphs} computes an optimal firefighting sequence for an arbitrary input graph $G$ in exponential time. It checks for every possible permutation of vertices in $G$, sequentially, if it is a valid firefighting sequence. It is a brute force algorithm.\\
+
+\begin{algorithm}\label{algorithm:firefight-general-graphs}
+Given the input $(G,\ s)$, where $G$ is an arbitrary graph, and $s\in G.V$ is the initial fire source, perform the following steps.
+\end{algorithm}
+
+\textbf{\textit{Stage 1.}} $n = |G.V|$. Let that the vertices in $G.V$ be labelled as $v_1,v_2,\dots,v_n$. $i=1$. $S_{max}$ is the firefighting sequence which saves maximum vertices and $m$ is the number of vertices saved by $S_{max}$, initially $m=0$, $S_{max}=\phi$. If $i\leq n$, perform the following steps.
+
+\textbf{\textit{Stage 1.1.}} For every permutation $P$ of size $i$ in the sequence $(1,2,\dots,n)$ (where $P$ itself is a sequence of numbers), perform the following steps.
+
+\textbf{\textit{Stage 1.1.2.}} Let $S = (v_{P[1]},v_{P[2]},\dots,v_{P[|P|]})$. If $S$ is is a valid firefighting sequence by \Cref{algorithm:verify-firefighter} (\Cref{lemma:verify-firefighter}), then if $m>$ the total number of vertices protected and saved by $S$, then $S_{max}=S$ and $m=$ the number of vertices protected and saved by $S$.
+
+\textbf{\textit{Stage 1.2.}} $i=i+1$.
+
+\textbf{\textit{Stage 2.}} Return $S_{max}$.\\
+
+Using \Cref{algorithm:firefight-general-graphs}, we compute a valid firefighting sequence which is able to protect and save the maximum number of vertices in $G$. In-spite of computing this throughout all the permutations of all sizes in $v_1,v_2,\dots,v_n$, we could also return the first valid firefighting sequence that we encounter, but that would not suffice the task of saving the maximum vertices.
+
+% \bibliography{ref.bib}
+% \bibliographystyle{plain}
